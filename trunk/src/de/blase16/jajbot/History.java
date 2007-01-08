@@ -1,6 +1,6 @@
 /*
  *  History.java - organize the message history.
- *  Copyright (C) 2006  kalkin (Bahtiar Gadimov)
+ *  Copyright (C) 2006  kalkin
  *  This file is part of JAJBoF (Just Another Jabber Bot Framework) .
  *   
  *  JAJBoF (Just Another Jabber Bot Framework) is free software; 
@@ -25,7 +25,7 @@ package de.blase16.jajbot;
 import java.util.LinkedList;
 
 /**
- * @author <a href="mailto:blase16@blase16.de">kalkin</a>
+ * @author <a href="mailto:klakin-@web.de">kalkin</a>
  * 
  */
 public class History extends LinkedList<String> {
@@ -33,7 +33,7 @@ public class History extends LinkedList<String> {
     /**
          * 
          */
-    private static final long serialVersionUID = -3475428678636945627L;
+   private static final long serialVersionUID = -3475428678636945627L;
 
     /**
          * 
