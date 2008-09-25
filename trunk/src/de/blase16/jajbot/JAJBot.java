@@ -34,6 +34,7 @@ import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.util.StringUtils;
 
 import de.blase16.jajbot.modules.AdminModul;
 import de.blase16.jajbot.modules.XmlConsoleModul;
@@ -242,15 +243,15 @@ public class JAJBot {
 	if (!isConnected) {
 	    if (useSSL) {
 		ConnectionConfiguration conConf = new ConnectionConfiguration(
-			parseJID(jid)[1]);
+			StringUtils.parseServer(jid));
 		conConf
 			.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
 		connection = new XMPPConnection(conConf);
 	    }
 	    if (!useSSL)
-		connection = new XMPPConnection(parseJID(jid)[1]);
+		connection = new XMPPConnection(StringUtils.parseServer(jid));
 	    connection.connect();
-	    connection.login(parseJID(jid)[0], pw, ressource);
+	    connection.login(StringUtils.parseName(jid), pw, ressource);
 	    presence = new Presence(Presence.Type.available);
 	    presence.setMode(Presence.Mode.chat);
 	    presence.setStatus(freeForChatMessage);
@@ -268,13 +269,6 @@ public class JAJBot {
 
     }
  
-    public String[] parseJID(String jid) {
-	String result[] = new String[2];
-	result[0] = jid.substring(0, jid.indexOf('@'));
-	result[1] = jid.substring(jid.indexOf('@') + 1);
-	return result;
-    }
-
     private String printLicense() {
 	String lizense = "\nJAJBoF (Just Another Jabber Bot Framework) version 0.23,\n";
 	lizense += "Copyright (C) 2006 kalkin\n";
