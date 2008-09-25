@@ -65,8 +65,8 @@ public class JAJBot {
 
     private int session_timeout = 300;
 
-    private String warnMessage = "Don't spam!\nYou will be banned!";
-
+    private String warnMessage = "You are banned, you fucking spammer!";
+    
     private String blockedMessage = "You are banned, you fucking spammer!";
 
     private boolean loggingOnConsole = true;
@@ -88,7 +88,7 @@ public class JAJBot {
     private Presence presence;
 
     // TODO: remove my JID
-    private String admin = "porz@st004.idle";
+    private String admin = "kalkin@jabber.ccc.de";
 
     private Roster roster;
 
@@ -170,12 +170,12 @@ public class JAJBot {
     }
 
     /**
-         * With this method you can load the complete config from a *.properties
-         * file
-         * 
-         * @param fileName
-         * @return
-         */
+     * With this method you can load the complete config from a *.properties
+     * file
+     * 
+     * @param fileName
+     * @return
+     */
     private boolean loadConfig(File fileName) {
 	config = new Properties();
 	try {
@@ -247,15 +247,16 @@ public class JAJBot {
     }
 
     /**
-         * This method connect the bot to a jabber server.
-         * 
-         * @param jid
-         * @param pw
-         * @param ressource
-         * @throws XMPPException
-         */
+     * This method connect the bot to a jabber server.
+     * 
+     * @param jid
+     * @param pw
+     * @param ressource
+     * @throws XMPPException
+     */
     private void connect(String jid, String pw, String ressource)
 	    throws XMPPException {
+	
 	if (!isConnected) {
 	    if (useSSL) {
 		ConnectionConfiguration conConf = new ConnectionConfiguration(
@@ -266,7 +267,7 @@ public class JAJBot {
 	    }
 	    if (!useSSL)
 		connection = new XMPPConnection(parseJID(jid)[1]);
-
+	    connection.connect();
 	    connection.login(parseJID(jid)[0], pw, ressource);
 	    presence = new Presence(Presence.Type.available);
 	    presence.setMode(Presence.Mode.chat);
@@ -362,16 +363,16 @@ public class JAJBot {
 	else if (msg.equalsIgnoreCase("lizense"))
 	    return printLicense();
 
-	return unknownMessage(msg, user);
+	return nextMessage(msg, user);
     }
 
     /**
-         * This method have to be replaced when you write your own bot
-         * 
-         * @param history
-         * @return A string which is send to the user.
-         */
-    public String unknownMessage(String msg, String user) {
+     * This method have to be replaced when you write your own bot
+     * 
+     * @param history
+     * @return A string which is send to the user.
+     */
+    public String nextMessage(String msg, String user) {
 	return null;
     }
 

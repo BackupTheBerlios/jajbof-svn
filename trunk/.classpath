@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/smack/smackx-debug.jar"/>
-	<classpathentry kind="lib" path="lib/smack/smackx.jar"/>
 	<classpathentry kind="lib" path="lib/smack/smack.jar"/>
+	<classpathentry kind="lib" path="/Users/kalkin/projects/opensource/jajbof/trunk/lib/hsqldb/hsqldb.jar"/>
+	<classpathentry kind="lib" path="lib/smack/smackx.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
