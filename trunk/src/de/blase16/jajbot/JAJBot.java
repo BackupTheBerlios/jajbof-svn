@@ -35,8 +35,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 
-import de.blase16.jajbot.moduls.AdminModul;
-import de.blase16.jajbot.moduls.XmlConsoleModul;
+import de.blase16.jajbot.modules.AdminModul;
+import de.blase16.jajbot.modules.XmlConsoleModul;
 
 /**
  * @author <a href="mailto:mail@kalkin.de">kalkin</a>
