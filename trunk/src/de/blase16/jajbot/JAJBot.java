@@ -27,23 +27,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Properties;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smackx.muc.InvitationListener;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import de.blase16.jajbot.moduls.AdminModul;
 import de.blase16.jajbot.moduls.XmlConsoleModul;
 
 /**
@@ -269,16 +261,12 @@ public class JAJBot {
     }
 
     private void waitForPackets() {
-	XmlConsoleModul xml = new XmlConsoleModul();
+	XmlConsoleModul xml = new XmlConsoleModul(connection);
+	AdminModul adminModul = new AdminModul(connection);
 	connection.addPacketListener(xml, xml.getFilter());
+	connection.addPacketListener(adminModul, adminModul.getFilter());
 
     }
-
-    private void runThreadRun(String user, Packet packet) {
-	threads.toString();
-	threads.remove(user);
-    }
-
  
     public String[] parseJID(String jid) {
 	String result[] = new String[2];

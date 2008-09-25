@@ -3,6 +3,7 @@
  */
 package de.blase16.jajbot.moduls;
 
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Packet;
 
@@ -18,9 +19,10 @@ public class XmlConsoleModul implements JAJBofModul {
     private NotAPacketFilter filter;
     
     /**
+     * @param connection 
      * 
      */
-    public XmlConsoleModul() {
+    public XmlConsoleModul(XMPPConnection connection) {
 	filter  = new NotAPacketFilter();
     }
 
