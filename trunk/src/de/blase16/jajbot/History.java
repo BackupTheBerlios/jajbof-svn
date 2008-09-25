@@ -55,6 +55,8 @@ public class History extends LinkedList<String> {
 
     private boolean limited;
 
+    private boolean spam = false; 
+    
     /**
          * 
          */
@@ -72,6 +74,15 @@ public class History extends LinkedList<String> {
 	initialCapacity = arg0;
     }
 
+    public void spamDisabled()
+    {
+	this.spam = true;
+    }
+    
+    public void spamEnabled()
+    {
+	this.spam = false;
+    }
     /**
          * @param msg
          */
@@ -80,7 +91,7 @@ public class History extends LinkedList<String> {
 	    remove();
 	add(msg);
 	lastUsedTime = System.currentTimeMillis();
-	if (size() % 20 == 0) {
+	if (size() % 20 == 0 && this.spam) {
 	    if (size() >= 20) {
 		if (lastUsedTime - last20Time <= 18000) {
 		    if (warned){

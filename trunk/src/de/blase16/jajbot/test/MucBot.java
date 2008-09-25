@@ -4,10 +4,11 @@ import org.jivesoftware.smack.XMPPException;
 
 import de.blase16.jajbot.JAJBot;
 
-public class SimplestBot extends JAJBot {
+public class MucBot extends JAJBot {
 
-    public SimplestBot(String user, String pw) throws XMPPException {
-	super(user, pw);
+    public MucBot(String jid, String pw) throws XMPPException {
+	super(jid, pw);
+	// TODO Auto-generated constructor stub
     }
 
     /**
@@ -16,7 +17,7 @@ public class SimplestBot extends JAJBot {
     public static void main(String[] args) {
 	try {
 	    @SuppressWarnings("unused")
-	    SimplestBot me = new SimplestBot("kalkin_bot@jabber.ccc.de",
+	    MucBot me = new MucBot("kalkin_bot@jabber.ccc.de",
 		    "vegeta");
 	} catch (XMPPException e) {
 	    // TODO Auto-generated catch block
@@ -25,9 +26,5 @@ public class SimplestBot extends JAJBot {
 
     }
 
-    public String nextMessage(String msg, String user) {
-	System.out.println(msg + " : " + user);
-	return null;
-    }
 
 }

@@ -41,6 +41,8 @@ import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.muc.InvitationListener;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 /**
  * @author <a href="mailto:kalkin-@web.de">kalkin</a>
@@ -66,7 +68,7 @@ public class JAJBot {
     private int session_timeout = 300;
 
     private String warnMessage = "You are banned, you fucking spammer!";
-    
+
     private String blockedMessage = "You are banned, you fucking spammer!";
 
     private boolean loggingOnConsole = true;
@@ -256,7 +258,7 @@ public class JAJBot {
      */
     private void connect(String jid, String pw, String ressource)
 	    throws XMPPException {
-	
+
 	if (!isConnected) {
 	    if (useSSL) {
 		ConnectionConfiguration conConf = new ConnectionConfiguration(
@@ -279,8 +281,8 @@ public class JAJBot {
     }
 
     private void waitForPackets() {
-	PacketFilter filter = new PacketTypeFilter(Message.class);
-	PacketListener myListener = new PacketListener() {
+	PacketFilter messageFilter = new PacketTypeFilter(Message.class);
+	PacketListener messageListner = new PacketListener() {
 	    public void processPacket(Packet packet) {
 		final Message message = (Message) packet;
 		final String user = message.getFrom().substring(0,
@@ -306,7 +308,21 @@ public class JAJBot {
 		}
 	    }
 	};
-	connection.addPacketListener(myListener, filter);
+	MultiUserChat.addInvitationListener(connection,
+		new InvitationListener() {
+		    public void invitationReceived(XMPPConnection conn,
+			    String room, String inviter, String reason,
+			    String password, Message msg) {
+			System.out.println(inviter);
+			try {
+			    new MultiUserChat(conn, room).join("jajbof");
+			} catch (XMPPException e) {
+			    e.printStackTrace();
+			}
+		    }
+		});
+	connection.addPacketListener(messageListner, messageFilter);
+
     }
 
     private void runThreadRun(String user, Message message) {
@@ -333,8 +349,11 @@ public class JAJBot {
 		answer.setBody(warnMessage);
 		connection.sendPacket(answer);
 	    } else {
-		answer.setBody(handleMessage(msg, user));
-		connection.sendPacket(answer);
+		String tmp = handleMessage(msg, user);
+		if (tmp == null) {
+		    answer.setBody(tmp);
+		    connection.sendPacket(answer);
+		}
 	    }
 	    history = map.get(user);
 	    index++;
@@ -384,7 +403,7 @@ public class JAJBot {
     }
 
     public void updateSessions() {
-	Iterator keys = map.keySet().iterator();
+	Iterator<String> keys = map.keySet().iterator();
 	while (keys.hasNext()) {
 	    String key = (String) keys.next();
 	    History history = map.get(key);
