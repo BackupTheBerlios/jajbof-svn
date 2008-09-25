@@ -44,8 +44,10 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smackx.muc.InvitationListener;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+import de.blase16.jajbot.moduls.XmlConsoleModul;
+
 /**
- * @author <a href="mailto:kalkin-@web.de">kalkin</a>
+ * @author <a href="mailto:mail@kalkin.de">kalkin</a>
  * 
  */
 
@@ -94,12 +96,6 @@ public class JAJBot {
 
     private Roster roster;
 
-    protected HashMap<String, History> map = new HashMap<String, History>();
-
-    protected LinkedList<String> warned = new LinkedList<String>();
-
-    protected LinkedList<String> banned = new LinkedList<String>();
-
     protected HashMap<String, Thread> threads = new HashMap<String, Thread>();
 
     public JAJBot(String fileName) throws XMPPException {
@@ -110,8 +106,6 @@ public class JAJBot {
 	    while (true)
 		try {
 		    Thread.sleep(2000);
-		    if (map.size() > 0)
-			updateSessions();
 		} catch (InterruptedException e) {
 		    e.printStackTrace();
 		}
@@ -128,8 +122,6 @@ public class JAJBot {
 	while (true)
 	    try {
 		Thread.sleep(2000);
-		if (map.size() > 0)
-		    updateSessions();
 	    } catch (InterruptedException e) {
 		e.printStackTrace();
 	    }
@@ -145,8 +137,6 @@ public class JAJBot {
 	while (true)
 	    try {
 		Thread.sleep(2000);
-		if (map.size() > 0)
-		    updateSessions();
 	    } catch (InterruptedException e) {
 		e.printStackTrace();
 	    }
@@ -164,8 +154,6 @@ public class JAJBot {
 	while (true)
 	    try {
 		Thread.sleep(2000);
-		if (map.size() > 0)
-		    updateSessions();
 	    } catch (InterruptedException e) {
 		e.printStackTrace();
 	    }
@@ -281,160 +269,22 @@ public class JAJBot {
     }
 
     private void waitForPackets() {
-	PacketFilter messageFilter = new PacketTypeFilter(Message.class);
-	PacketListener messageListner = new PacketListener() {
-	    public void processPacket(Packet packet) {
-		final Message message = (Message) packet;
-		final String user = message.getFrom().substring(0,
-			message.getFrom().indexOf('/'));
-		if (!banned.contains(user)) {
-		    if (!map.containsKey(user)) {
-			makeHistory(user, message);
-		    } else {
-			History history = map.get(user);
-			history.addMessage(message.getBody());
-			map.put(user, history);
-		    }
-		    if (!threads.containsKey(user)) {
-			Thread session = new Thread() {
-			    @Override
-			    public void run() {
-				runThreadRun(user, message);
-			    }
-			};
-			threads.put(user, session);
-			session.start();
-		    }
-		}
-	    }
-	};
-	MultiUserChat.addInvitationListener(connection,
-		new InvitationListener() {
-		    public void invitationReceived(XMPPConnection conn,
-			    String room, String inviter, String reason,
-			    String password, Message msg) {
-			System.out.println(inviter);
-			try {
-			    new MultiUserChat(conn, room).join("jajbof");
-			} catch (XMPPException e) {
-			    e.printStackTrace();
-			}
-		    }
-		});
-	connection.addPacketListener(messageListner, messageFilter);
+	XmlConsoleModul xml = new XmlConsoleModul();
+	connection.addPacketListener(xml, xml.getFilter());
 
     }
 
-    private void runThreadRun(String user, Message message) {
-	// Run Forrest, run!
-	History history = map.get(user);
-	int index = history.indexOf(message.getBody());
-	String msg = history.get(index);
-	Message answer = new Message();
-	answer.setTo(user);
-	answer.setType(message.getType());
-	do {
-	    msg = history.get(index);
-	    if (loggingOnConsole)
-		System.out.println("<" + user + "> " + msg);
-
-	    if (history.isBlocked()) {
-		banned.add(user);
-		answer.setBody(blockedMessage);
-		connection.sendPacket(answer);
-		break;
-	    }
-	    if (history.isWarned() && !warned.contains(user)) {
-		warned.add(user);
-		answer.setBody(warnMessage);
-		connection.sendPacket(answer);
-	    } else {
-		String tmp = handleMessage(msg, user);
-		if (tmp == null) {
-		    answer.setBody(tmp);
-		    connection.sendPacket(answer);
-		}
-	    }
-	    history = map.get(user);
-	    index++;
-	} while (!msg.equals(history.getLast()));
+    private void runThreadRun(String user, Packet packet) {
 	threads.toString();
 	threads.remove(user);
     }
 
-    private String handleMessage(String msg, String user) {
-	if (user.equals(admin) && msg.equalsIgnoreCase("die")) {
-	    connection.disconnect();
-	    System.out
-		    .println("\nMarks died, Lenin died and I have to go also...");
-	    System.exit(0);
-	} else if (!user.equals(admin) && msg.equalsIgnoreCase("die"))
-	    return "I'm immortal! Only root can kill me. *mad laughing*";
-	else if (msg.equalsIgnoreCase("about"))
-	    return about;
-	else if (msg.equalsIgnoreCase("help"))
-	    return help;
-	else if (msg
-		.equalsIgnoreCase("the answer to life, the universe and everything"))
-	    return "42";
-	else if (msg.equalsIgnoreCase("history"))
-	    return map.get(user).getUserHistory();
-	else if (msg.equalsIgnoreCase("lizense"))
-	    return printLicense();
-
-	return nextMessage(msg, user);
-    }
-
-    /**
-     * This method have to be replaced when you write your own bot
-     * 
-     * @param history
-     * @return A string which is send to the user.
-     */
-    public String nextMessage(String msg, String user) {
-	return null;
-    }
-
+ 
     public String[] parseJID(String jid) {
 	String result[] = new String[2];
 	result[0] = jid.substring(0, jid.indexOf('@'));
 	result[1] = jid.substring(jid.indexOf('@') + 1);
 	return result;
-    }
-
-    public void updateSessions() {
-	Iterator<String> keys = map.keySet().iterator();
-	while (keys.hasNext()) {
-	    String key = (String) keys.next();
-	    History history = map.get(key);
-	    if (System.currentTimeMillis() - history.lastUsed() > session_timeout * 1000)
-		map.remove(key);
-	    if (map.size() == 0) {
-		presence.setMode(Presence.Mode.chat);
-		presence.setStatus(freeForChatMessage);
-		connection.sendPacket(presence);
-	    } else if (map.size() < availableStat) {
-		presence.setMode(Presence.Mode.available);
-		presence.setStatus(availableMessage);
-		connection.sendPacket(presence);
-	    } else if (map.size() < dndStat) {
-		presence.setMode(Presence.Mode.dnd);
-		presence.setStatus(dndMessage);
-		connection.sendPacket(presence);
-	    }
-
-	}
-    } // end of updateSessions()
-
-    private void makeHistory(String user, Message message) {
-	History history;
-	if (historySize > 0)
-	    history = new History(historySize);
-	else
-	    history = new History();
-
-	history.addMessage(message.getBody());
-	map.put(user, history);
     }
 
     private String printLicense() {

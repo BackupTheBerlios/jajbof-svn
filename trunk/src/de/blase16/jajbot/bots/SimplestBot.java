@@ -1,4 +1,4 @@
-package de.blase16.jajbot.test;
+package de.blase16.jajbot.bots;
 
 import org.jivesoftware.smack.XMPPException;
 
@@ -6,8 +6,8 @@ import de.blase16.jajbot.JAJBot;
 
 public class SimplestBot extends JAJBot {
 
-    public SimplestBot(String user, String pw) throws XMPPException {
-	super(user, pw);
+    public SimplestBot(String file) throws XMPPException {
+	super(file);
     }
 
     /**
@@ -16,8 +16,7 @@ public class SimplestBot extends JAJBot {
     public static void main(String[] args) {
 	try {
 	    @SuppressWarnings("unused")
-	    SimplestBot me = new SimplestBot("kalkin_bot@jabber.ccc.de",
-		    "vegeta");
+	    SimplestBot me = new SimplestBot("config.properties");
 	} catch (XMPPException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
