@@ -1,0 +1,199 @@
+                                Smack Changelog
+
+   Readme|Changelog
+
+3.0.4 -- June 21, 2007
+
+  Bug Fixes
+
+     * [SMACK-224] - SASL Authenticate Mechanisim uses XMPP domain instead of
+       FQDN.
+     * [SMACK-227] - Made documentation fixes.
+     * [SMACK-229] - Fixed a NPE in the chat state manager.
+
+3.0.3 -- May 31, 2007
+
+  New Features
+
+     * [SMACK-99] - Added support for multiple message bodies and message
+       body languages.
+     * [SMACK-218] - Implemented GSSAPI for single-sign on.
+
+  Bug Fixes
+
+     * [SMACK-219] - The getPresence method was not working correctly with
+       offline presence.
+     * [SMACK-224] - SASL authenticion was using the XMPP domain instead of
+       the FQDN.
+
+3.0.2 -- May 3, 2007
+
+  Bug Fixes
+
+     * [SMACK-212] - Jingle can't establish session if only one side has a
+       relay service
+     * [SMACK-213] - RTP Bridge Resolver get wrong localhost address in
+       certain situations
+     * [SMACK-214] - Presences with a negative priority of -1 are not sending
+       the priority to the server
+
+3.0.1 -- April 12, 2007
+
+  Bug Fixes
+
+     * [SMACK-211] - Jingle ICE with relay sometimes closed sessions.
+     * Upgraded bundled version of JSTUN.
+
+3.0.0 -- March 31, 2007
+
+  Important Changes
+
+     * Java 5 is now required.
+     * Several API changes are not backwards compatible. In particular,
+       connection handling has been significantly updated, the GroupChat
+       class has been dropped in favor of the standardized MultiUserChat, and
+       the Chat class has an updated API.
+
+  New Features
+
+     * [SMACK-74] - Added support for unavailable presences with status text.
+       (4 votes)
+     * [SMACK-191] - RosterListener API improvements.
+     * [SMACK-194] - Roster.getPresence(String) now considers mode after
+       priority to determine the presence value to return.
+     * [SMACK-195] - Added the ability to disconnect with a custom presence
+       value (for offline status).
+     * [SMACK-200] - Added convenience methods to Presence class.
+     * [SMACK-31] - Added support for privacy lists. (4 votes)
+     * [SMACK-94] - Added support for last activity of online users. (1 vote)
+     * [SMACK-121] - Added support for stream errors.
+     * [SMACK-136] - Added support for XEP-0048: bookmark storage.
+     * [SMACK-144] - Added bookmark manager for central bookmark management.
+     * [SMACK-150] - Added support for handling node features in disco.
+     * [SMACK-167] - Added support for XEP-0106: JID Escaping
+     * [SMACK-171] - The presence of available contacts is now changed to
+       offline when the connection is closed.
+     * [SMACK-172] - Added support for re-connection when the connection is
+       abruptly closed.
+     * [SMACK-182] - ProviderManager is now pluggable (for Eclipse ECF).
+     * [SMACK-185] - Added the workgroup API to Smack.
+     * [SMACK-206] - Added the option to specify the username to use for the
+       automated test cases.
+     * [SMACK-208] - Added a max queue size for outgoing packets to prevent
+       memory issues during extreme load.
+     * [SMACK-209] - Initial Jingle support implemented.
+
+  Bug Fixes
+
+     * [SMACK-6] - Don't force use of collectors in Chat class.
+     * [SMACK-10] - Flush pending packets before closing the connection. (4
+       votes)
+     * [SMACK-51] - Use unique Thread names among connections.
+     * [SMACK-54] - Add #equals and #hashCode to Occupant.
+     * [SMACK-86] - Made presence checks case in-sensitive.
+     * [SMACK-93] - XHTML provider wasn't handling some tags correctly.
+     * [SMACK-138] - Added caching to file transfer negotiation operations.
+     * [SMACK-143] - Updated XMPPError to be compliant with RFC3920.
+     * [SMACK-145] - XHTML parsing could fail in some cases.
+     * [SMACK-146] - DNS lookups were failing with some DNS servers.
+     * [SMACK-147] - Removed invisibility presence mode.
+     * [SMACK-148] - Socks 5 listening thread was not cleaning up correctly.
+       (2 votes)
+     * [SMACK-149] - Fixed possible memory leaking in PacketReader.
+     * [SMACK-151] - Now use getBytes("UTF-8") instead of getBytes().
+     * [SMACK-152] - The FN field is duplicated when loading vCards from the
+       server.
+     * [SMACK-153] - Optimized performance by replacing StringBuffer with
+       StringBuilder.
+     * [SMACK-154] - Fixed roster test cases that were sometimes failing.
+     * [SMACK-155] - Optimized MUC performance by reducing number of packet
+       collectors and listeners.
+     * [SMACK-158] - FileTransfer isDone() method was returning true even
+       when the transfer was refused.
+     * [SMACK-159] - Filenames were not escaped for file transfers.
+     * [SMACK-160] - Now use stream:feature to discover registration support.
+     * [SMACK-161] - Improved connection speed.
+     * [SMACK-162] - Fixed NPE in SmackConfiguration.
+     * [SMACK-163] - Fixed NPE in RoomInfo when subject was null.
+     * [SMACK-164] - Contact name was not being escaped.
+     * [SMACK-165] - Listeners were not being removed from PacketReader.
+     * [SMACK-166] - Packet reader thread was freezing when parsing an error
+       text with no description.
+     * [SMACK-168] - Fixed possible delay in PacketReader when negotiating
+       TLS.
+     * [SMACK-173] - Renamed ConnectionEstablishedListener to
+       ConnectionCreationListener.
+     * [SMACK-176] - Fixed incorrect property initialization.
+     * [SMACK-177] - Removed synchronization from Roster.
+     * [SMACK-178] - Added NodeInformation#getNodeIdentities() to return
+       identities of hosted nodes
+     * [SMACK-181] - Improved parsing of certificates to get signed domains.
+     * [SMACK-183] - Documentation fixes.
+     * [SMACK-184] - Simplified XMPPConnection constructors.
+     * [SMACK-203] - NULL thread IDs would cause an error inside of the Chat
+       Manager.
+     * [SMACK-205] - Fixed PacketReader concurrency problems.
+     * [SMACK-188] - Resources are now closed after reading the keystore.
+     * [SMACK-189] - The listener was remaining blocked forever in some
+       cases.
+     * [SMACK-190] - Exceptions while notifying packet reader listeners was
+       stopping the notification thread.
+     * [SMACK-192] - Roster.getPresence(String) now forces use of the bare
+       JID.
+     * [SMACK-193] - New presence packets now default to a null presence
+       mode.
+     * [SMACK-196] - Now set closed to true at the start of the connection
+       shutdown method and not the end.
+     * [SMACK-197] - The source build was failing.
+     * [SMACK-198] - File transfer streams were not being closed properly in
+       some cases.
+     * [SMACK-199] - MultiUserChat invitation listeners are no longer removed
+       on disconnects.
+     * [SMACK-201] - Roster no longer exposes that it implements
+       ConnectionListener.
+
+2.2.1 -- June 12, 2006
+
+     * [SMACK-141] - Fixed SSL exception while creating new XMPPConnections.
+       (1 vote)
+     * [SMACK-127] - Fixed incorrect file transfer progress.
+     * [SMACK-130] - Fixed VCard escaping problem that was crashing
+       connections.
+     * [SMACK-134] - VCards were not being saved when avatar was the only
+       element.
+     * [SMACK-131] - Illegal XML characters are now properly escaped in the
+       presence status.
+     * [SMACK-133] - Illegal XML characters are now properly escaped in
+       groups names.
+     * [SMACK-132] - Fixed IBB problem triggered when buffersize was
+       increased.
+     * [SMACK-135] - Moved to new Base64 implementation to fix line break
+       issue in old implementation.
+
+2.2.0 -- March 9, 2006
+
+     * [SMACK-122] - Added support for JEP-96: File Transfer. (1 vote)
+     * [SMACK-72] - Added support for JEP-47: In-Band Bytestreams. (2 votes)
+     * [SMACK-122] - Added support for JEP-65: SOCKS5 Bytestreams. (1 vote)
+     * [SMACK-112] - Added support for JEP-38 Stream Compression.
+     * [SMACK-117] - Added support for JEP-33: Extended Stanza Addressing.
+     * [SMACK-27] - Certification validation is now pluggable.
+     * [SMACK-118] - Added methods to dynamically remove providers.
+     * [SMACK-125] - Added support for deaf occupant in MUC rooms.
+     * [SMACK-109] - Optimized client performance. (1 vote)
+     * [SMACK-113] - Added support for choosing if TLS should be used or not.
+     * [SMACK-114] - Added support for choosing if SASL should be used or
+       not.
+     * [SMACK-123] - A thread is no longer used for packet writer listeners.
+     * [SMACK-110] - Resource binding and session establishment are now
+       requested only if the server offered them.
+     * [SMACK-111] - Fixed concurrency issue with date formatter.
+     * [SMACK-116] - Fixed vCard issues.
+     * [SMACK-119] - Fixed AccessControlException when using vCard from an
+       applet.
+     * [SMACK-120] - Listener thread was not being shutdown properly.
+     * [SMACK-124] - Parsing resource binding packets was requiring
+       smackx.jar file to be in the classpath.
+     * [SMACK-97] - Fixed functional test failures in PresencePriorityTest
+       and RosterTest.
+   Copyright (c) Jive Software, 2004-2007
