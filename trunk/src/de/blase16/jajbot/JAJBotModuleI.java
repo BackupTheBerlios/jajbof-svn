@@ -1,5 +1,5 @@
 /*
- * This is an interface for JAJBof modules.
+ *  This is an interface for JAJBof modules.
  *  Copyright (C) 2006  kalkin
  *  This file is part of JAJBoF (Just Another Jabber Bot Framework) .
  *   
