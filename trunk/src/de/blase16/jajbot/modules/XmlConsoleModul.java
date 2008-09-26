@@ -26,14 +26,14 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Packet;
 
-import de.blase16.jajbot.JAJBofModul;
+import de.blase16.jajbot.JAJBotModuleI;
 import de.blase16.jajbot.filters.NotAPacketFilter;
 
 /**
  * @author kalkin
  *
  */
-public class XmlConsoleModul implements JAJBofModul {
+public class XmlConsoleModul implements JAJBotModuleI {
 
     private NotAPacketFilter filter;
     

@@ -22,30 +22,32 @@
 
 package de.blase16.jajbot.modules;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.FromMatchesFilter;
 import org.jivesoftware.smack.filter.OrFilter;
-import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
-import de.blase16.jajbot.JAJBofModul;
+import de.blase16.jajbot.JAJBotModule;
+import de.blase16.jajbot.JAJBotModuleI;
 
-public class AdminModul implements JAJBofModul {
+public class AdminModul extends JAJBotModule implements JAJBotModuleI {
 
-    private AndFilter filter;
+    protected AndFilter filter;
 
-    private String[] admins = { "kalkin@jabber.ccc.de", "vt100@jabber.ccc.de" };
+    protected String about = "Das ist ein Bot. Es benutzt das JAJBoF.\n"
+	    + "Der Bot gehšrt kalkin@jabber.ccc.de.\n "
+	    + "Mit !shutdown kann kalkin und vt100 ihn abschalten";
 
-    private XMPPConnection connection;
+    protected String version = "0.00001";
 
-    public AdminModul(XMPPConnection connection) {
-	this.connection = connection;
+    protected String[] admins = { "kalkin@jabber.ccc.de", "vt100@jabber.ccc.de" };
+
+    public AdminModul(XMPPConnection conn) {
+	super(conn);
+	this.modPrefix = "";
 	OrFilter orFilter = new OrFilter();
 
 	for (String admin : admins) {
@@ -56,70 +58,10 @@ public class AdminModul implements JAJBofModul {
 	filter.addFilter(orFilter);
     }
 
-    public PacketFilter getFilter() {
-	return this.filter;
-    }
-
-    public void processPacket(Packet packet) {
-	Message msg = (Message) packet;
-	String body = msg.getBody();
-	String cmd = null;
-	System.out.println(body);
-	if (!body.startsWith("!")) {
-	    return;
-	} else {
-	    if (body.contains(" ")) {
-		int t = body.indexOf(" ");
-		cmd = body.substring(1, t);
-	    } else {
-		cmd = body.substring(1);
-	    }
-
-	}
-	cmd = "cmd" + cmd.substring(0, 1).toUpperCase() + cmd.substring(1);
-	try {
-	    this.getClass().getMethod(cmd, Packet.class).invoke(this, packet);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
-
     public void cmdShutdown(Packet packet) {
-	Message answer = new Message(packet.getFrom());
-	answer.setBody("Marx died, Lenin died and I have to go also...");
-	this.connection.sendPacket(answer);
+	sendMessage(packet.getFrom(),
+		"Marx died, Lenin died and I have to go also...");
 	System.exit(0);
-    }
-
-    public void cmdAbout(Packet packet) {
-	Message answer = new Message(packet.getFrom());
-	answer.setBody("I'm just a Bot");
-	this.connection.sendPacket(answer);
-    }
-
-    public void cmdHelp(Packet packet) {
-	Method[] meth = this.getClass().getMethods();
-	String body = "The modul admin contains following commands:\n";
-	for (Method method : meth) {
-	    Type[] types = method.getGenericParameterTypes();
-	    if (types.length == 1 && types[0].equals(Packet.class)
-		    && method.getName().startsWith("cmd")) {
-		body += "!" + method.getName().substring(3).toLowerCase() + "\n";
-	    }
-	}
-	Message msg = new Message(packet.getFrom());
-	msg.setBody(body);
-	this.connection.sendPacket(msg);
-    }
-
-    public void cmdVersion(Packet packet) {
-	Message msg = new Message(packet.getFrom());
-	msg.setBody("Version: 0.000001");
-	this.connection.sendPacket(msg);
-    }
-
-    public String getCompatibility() {
-	return null;
     }
 
 }

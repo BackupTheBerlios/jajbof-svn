@@ -32,7 +32,7 @@ import org.jivesoftware.smack.packet.Packet;
  * @author kalkin
  * 
  */
-public interface JAJBofModul extends PacketListener {
+public interface JAJBotModuleI extends PacketListener {
 
     /**
      * Do something with the packet
