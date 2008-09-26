@@ -11,8 +11,6 @@ import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
-import de.blase16.jajbot.filters.NotAPacketFilter;
-
 /**
  * @author kalkin
  * 
