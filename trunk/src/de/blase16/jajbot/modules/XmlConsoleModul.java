@@ -26,6 +26,7 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Packet;
 
+import de.blase16.jajbot.JAJBotModule;
 import de.blase16.jajbot.JAJBotModuleI;
 import de.blase16.jajbot.filters.NotAPacketFilter;
 
@@ -33,37 +34,24 @@ import de.blase16.jajbot.filters.NotAPacketFilter;
  * @author kalkin
  *
  */
-public class XmlConsoleModul implements JAJBotModuleI {
+public class XmlConsoleModul extends JAJBotModule implements JAJBotModuleI {
 
     private NotAPacketFilter filter;
     
-    /**
-     * @param connection 
-     * 
-     */
     public XmlConsoleModul(XMPPConnection connection) {
+	super(connection);
 	filter  = new NotAPacketFilter();
     }
 
-    /* (non-Javadoc)
-     * @see org.jivesoftware.smack.PacketListener#processPacket(org.jivesoftware.smack.packet.Packet)
-     */
     public void processPacket(Packet packet) {
 	System.out.println(packet.toXML());
+	this.about = null;
+	this.version = null;
     }
-
+    
     public PacketFilter getFilter()
     {
 	return filter;
-    }
-
-    public void cmdAbout(Packet packet) {
-    }
-
-    public void cmdHelp(Packet packet) {
-    }
-
-    public void cmdVersion(Packet packet) {
     }
 
     public String getCompatibility() {
