@@ -36,18 +36,16 @@ import de.blase16.jajbot.JAJBotModuleI;
 public class AdminModul extends JAJBotModule implements JAJBotModuleI {
 
     protected AndFilter filter;
-
-    protected String about = "Das ist ein Bot. Es benutzt das JAJBoF.\n"
-	    + "Der Bot gehšrt kalkin@jabber.ccc.de.\n "
-	    + "Mit !shutdown kann kalkin und vt100 ihn abschalten";
-
-    protected String version = "0.00001";
-
     protected String[] admins = { "kalkin@jabber.ccc.de", "vt100@jabber.ccc.de" };
 
     public AdminModul(XMPPConnection conn) {
 	super(conn);
 	this.modPrefix = "";
+	this.about = "Das ist ein Bot. Es benutzt das JAJBoF.\n"
+	    + "Der Bot gehšrt kalkin@jabber.ccc.de.\n "
+	    + "Mit !shutdown kann kalkin und vt100 ihn abschalten";
+	this.version = "0.2";
+	
 	OrFilter orFilter = new OrFilter();
 
 	for (String admin : admins) {

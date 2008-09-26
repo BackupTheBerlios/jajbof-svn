@@ -79,7 +79,7 @@ public class JAJBot {
 	System.out.println(printLicense());
 	if (loadConfig(new File(fileName))) {
 	    connect(jid, pw, ressource);
-	    waitForPackets();
+	    loadModules();
 	    while (true)
 		try {
 		    Thread.sleep(2000);
@@ -164,7 +164,10 @@ public class JAJBot {
 	}
     }
 
-    private void waitForPackets() {
+    /**
+     * This method loads the needed Modules
+     */
+    private void loadModules() {
 	LinkedList<Class<JAJBotModuleI>> modules = getModules();
 	if (modules == null) {
 	    System.out.println("No modules loaded");
@@ -183,6 +186,10 @@ public class JAJBot {
 	}
     }
 
+    
+    /**
+     * @return String containing the license
+     */
     private String printLicense() {
 	String lizense = "\nJAJBoF (Just Another Jabber Bot Framework) version 0.23,\n";
 	lizense += "Copyright (C) 2006 kalkin\n";

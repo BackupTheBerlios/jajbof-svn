@@ -123,7 +123,6 @@ public abstract class JAJBotModule implements JAJBotModuleI {
 	try {
 	    this.getClass().getMethod(cmd, Packet.class).invoke(this, packet);
 	} catch (Exception e) {
-	    e.printStackTrace();
 	}
     }
 
