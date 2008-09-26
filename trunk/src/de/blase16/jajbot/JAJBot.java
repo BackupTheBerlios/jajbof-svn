@@ -22,11 +22,17 @@
 
 package de.blase16.jajbot;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -36,8 +42,9 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
+import com.sun.org.apache.bcel.internal.util.ClassPath;
+
 import de.blase16.jajbot.modules.AdminModul;
-import de.blase16.jajbot.modules.XmlConsoleModul;
 
 /**
  * @author <a href="mailto:mail@kalkin.de">kalkin</a>
@@ -54,42 +61,19 @@ public class JAJBot {
 
     private String jid, pw;
 
+    private String statusMsg = "Here we're. Born to be kings...";
+
     private String ressource = "JAJBof";
-
-    private String about = "Just another bot which is using JAJBoF";
-
-    private String help = "Sorry but i can't help you :(";
-
-    private int session_timeout = 300;
-
-    private String warnMessage = "You are banned, you fucking spammer!";
-
-    private String blockedMessage = "You are banned, you fucking spammer!";
-
-    private boolean loggingOnConsole = true;
-
-    private String freeForChatMessage = "I feel lonely talk with me";
-
-    private String availableMessage = "Here I'm!";
-
-    private String dndMessage = "I hate my Work! :(";
-
-    private int availableStat = 10;
-
-    private int dndStat = 25;
 
     private boolean isConnected = false;
 
-    private int historySize = 200;
-
     private Presence presence;
-
-    // TODO: remove my JID
-    private String admin = "kalkin@jabber.ccc.de";
 
     private Roster roster;
 
-    protected HashMap<String, Thread> threads = new HashMap<String, Thread>();
+    private String modulePath = "./";
+
+    private String moduleFile = "modules";
 
     public JAJBot(String fileName) throws XMPPException {
 	System.out.println(printLicense());
@@ -106,55 +90,9 @@ public class JAJBot {
 	    System.out.println("The file does not exist or has wrong syntax.");
     }
 
-    public JAJBot(String jid, String pw) throws XMPPException {
-	System.out.println(printLicense());
-	this.jid = jid;
-	this.pw = pw;
-	connect(this.jid, this.pw, ressource);
-	waitForPackets();
-	while (true)
-	    try {
-		Thread.sleep(2000);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-    }
-
-    public JAJBot(String jid, String pw, boolean ssl) throws XMPPException {
-	System.out.println(printLicense());
-	this.jid = jid;
-	this.pw = pw;
-	useSSL = ssl;
-	connect(this.jid, this.pw, ressource);
-	waitForPackets();
-	while (true)
-	    try {
-		Thread.sleep(2000);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-    }
-
-    public JAJBot(String jid, String pw, String ressource, boolean ssl)
-	    throws XMPPException {
-	System.out.println(printLicense());
-	this.jid = jid;
-	this.pw = pw;
-	this.ressource = ressource;
-	useSSL = ssl;
-	connect(this.jid, this.pw, this.ressource);
-	waitForPackets();
-	while (true)
-	    try {
-		Thread.sleep(2000);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-	    }
-    }
-
     /**
-     * With this method you can load the complete config from a *.properties
-     * file
+     * With this method you can load the complete configration from a
+     * *.properties file
      * 
      * @param fileName
      * @return
@@ -171,53 +109,18 @@ public class JAJBot {
 	    if (config.getProperty("SSL") != null)
 		useSSL = Boolean.parseBoolean(config.getProperty("SSL"));
 
-	    if (config.getProperty("ABOUT") != null)
-		about = config.getProperty("ABOUT");
-
-	    if (config.getProperty("HELP") != null)
-		help = config.getProperty("HELP");
-
-	    if (config.getProperty("SESSION_TIMEOUT") != null)
-		session_timeout = Integer.parseInt(config
-			.getProperty("SESSION_TIMEOUT"));
-
-	    if (config.getProperty("AVAILABLE_STAT") != null)
-		availableStat = Integer.parseInt(config
-			.getProperty("AVAILABLE_STAT"));
-
-	    if (config.getProperty("DND_STAT") != null)
-		dndStat = Integer.parseInt(config.getProperty("DND_STAT"));
-
-	    if (config.getProperty("WARN_MSG") != null)
-		warnMessage = config.getProperty("WARN_MSG");
-
-	    if (config.getProperty("BANNED_MSG") != null)
-		blockedMessage = config.getProperty("BANNED_MSG");
-
-	    if (config.getProperty("LOG_ON_CONSOLE") != null)
-		loggingOnConsole = Boolean.parseBoolean(config
-			.getProperty("LOG_ON_CONSOLE"));
-
-	    if (config.getProperty("CHAT_MSG") != null)
-		freeForChatMessage = config.getProperty("CHAT_MSG");
-
-	    if (config.getProperty("AVAILABLE_MSG") != null)
-		availableMessage = config.getProperty("AVAILABLE_MSG");
-
-	    if (config.getProperty("DND_MSG") != null)
-		dndMessage = config.getProperty("DND_MSG");
-
 	    if (config.getProperty("RESSOURCE") != null)
 		ressource = config.getProperty("RESSOURCE");
 
-	    if (config.getProperty("HISTORY_SIZE") != null) {
-		historySize = Integer.parseInt(config
-			.getProperty("HISTORY_SIZE"));
-		if (historySize < 0)
-		    historySize = 0;
-	    }
-	    if (config.getProperty("ADMIN") != null)
-		admin = config.getProperty("ADMIN");
+	    if (config.getProperty("STATUS_MSG") != null)
+		statusMsg = config.getProperty("STATUS_MSG");
+
+	    if (config.getProperty("MODULE_PATH") != null)
+		modulePath = config.getProperty("MODULE_PATH");
+
+	    if (config.getProperty("MODULE_FILE") != null)
+		moduleFile = config.getProperty("MODULE_FILE");
+
 	} catch (FileNotFoundException e) {
 	    System.out.println("Damn it there is no " + fileName);
 	} catch (IOException e) {
@@ -253,8 +156,8 @@ public class JAJBot {
 	    connection.connect();
 	    connection.login(StringUtils.parseName(jid), pw, ressource);
 	    presence = new Presence(Presence.Type.available);
-	    presence.setMode(Presence.Mode.chat);
-	    presence.setStatus(freeForChatMessage);
+	    presence.setMode(Presence.Mode.available);
+	    presence.setStatus(this.statusMsg);
 	    connection.sendPacket(presence);
 	    roster = connection.getRoster();
 	    roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
@@ -262,13 +165,24 @@ public class JAJBot {
     }
 
     private void waitForPackets() {
-//	XmlConsoleModul xml = new XmlConsoleModul(connection);
-	AdminModul adminModul = new AdminModul(connection);
-//	connection.addPacketListener(xml, xml.getFilter());
-	connection.addPacketListener(adminModul, adminModul.getFilter());
+	LinkedList<Class<JAJBotModuleI>> modules = getModules();
+	if (modules == null) {
+	    System.out.println("No modules loaded");
+	    return;
+	}
+	for (Class<JAJBotModuleI> module : modules) {
 
+	    try {
+		JAJBotModuleI mod = (JAJBotModuleI) module.getConstructors()[0]
+			.newInstance(connection);
+		connection.addPacketListener(mod, mod.getFilter());
+	    } catch (Exception e) {
+		System.out.println("Couldn't create an instace of the module "
+			+ module.getName());
+	    }
+	}
     }
- 
+
     private String printLicense() {
 	String lizense = "\nJAJBoF (Just Another Jabber Bot Framework) version 0.23,\n";
 	lizense += "Copyright (C) 2006 kalkin\n";
@@ -278,4 +192,79 @@ public class JAJBot {
 	return lizense;
     }
 
+    /**
+     * Reads the module files and generates a {@link LinkedList} with all the
+     * modules to load. Used by getModules();
+     * 
+     * @see JAJBot.getModules()
+     * @return {@link LinkedList}
+     */
+    private LinkedList<String> getModulesNames() {
+	LinkedList<String> modules = new LinkedList<String>();
+	BufferedReader f = null;
+	try {
+	    f = new BufferedReader(new FileReader(new File(this.moduleFile)));
+	    while (true) {
+		String module = f.readLine();
+		if (module == null) {
+		    break;
+		}
+		modules.add(module);
+	    }
+	} catch (Exception e) {
+	    System.out.println("The file " + this.moduleFile
+		    + " doesn't exists");
+	}
+
+	if (modules.size() == 0) {
+	    System.out.println("No modules to load");
+	    return null;
+	}
+
+	return modules;
+    }
+
+    /**
+     * Adds all jar files in modulPath/modules-enabled directory to the
+     * classpath, and loads all modules from the modules file
+     * 
+     * @return {@link LinkedList}
+     */
+    @SuppressWarnings("unchecked")
+    private LinkedList<Class<JAJBotModuleI>> getModules() {
+	LinkedList<String> modulesNames = getModulesNames();
+	LinkedList<Class<JAJBotModuleI>> loadedModules = new LinkedList<Class<JAJBotModuleI>>();
+	if (modulesNames == null)
+	    return null;
+
+	File dir = new File(this.modulePath);
+	File[] files = dir.listFiles();
+
+	URL[] urls = new URL[files.length];
+	for (int i = 0; i < files.length; i++) {
+	    try {
+		if (files[i].toURL().toString().endsWith("jar")) {
+		    urls[i] = files[i].toURL();
+		}
+	    } catch (MalformedURLException e) {
+		System.out.println(e.getMessage());
+	    }
+	}
+	URLClassLoader cl = new URLClassLoader(urls);
+
+	for (String name : modulesNames) {
+	    System.out.println("Trying to load " + name);
+	    try {
+		loadedModules.add((Class<JAJBotModuleI>) Class.forName(name,
+			false, cl));
+		System.out.println("Loaded successfull " + name);
+	    } catch (Exception e) {
+		System.out.println("Can't find module " + name + "!");
+	    }
+	}
+
+	if (loadedModules.size() == 0)
+	    return null;
+	return loadedModules;
+    }
 }

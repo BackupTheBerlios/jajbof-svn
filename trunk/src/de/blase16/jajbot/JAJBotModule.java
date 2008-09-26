@@ -115,10 +115,7 @@ public abstract class JAJBotModule implements JAJBotModuleI {
     public void processPacket(Packet packet) {
 	Message msg = (Message) packet;
 	String body = msg.getBody();
-	System.out.println(body);
-	System.out.println(this.modPrefix);
 	String cmd = extractCommand(body);
-	System.out.println(cmd);
 	if (cmd == null)
 	    return;
 	cmd = "cmd" + cmd.substring(0, 1).toUpperCase() + cmd.substring(1);
