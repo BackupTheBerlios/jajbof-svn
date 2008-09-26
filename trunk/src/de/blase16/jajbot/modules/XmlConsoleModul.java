@@ -57,23 +57,16 @@ public class XmlConsoleModul implements JAJBofModul {
 	return filter;
     }
 
-    public String about() {
-	// TODO Auto-generated method stub
-	return null;
+    public void about(Packet packet) {
+    }
+
+    public void help(Packet packet) {
+    }
+
+    public void version(Packet packet) {
     }
 
     public String getCompatibility() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    public String getHelp() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    public String getVersion() {
-	// TODO Auto-generated method stub
 	return null;
     }
     

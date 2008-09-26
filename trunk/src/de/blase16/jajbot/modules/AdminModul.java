@@ -53,42 +53,54 @@ public class AdminModul implements JAJBofModul {
 	filter.addFilter(orFilter);
     }
 
-    public String about() {
-	return "This is the standart admin modul";
-    }
-
-    public String getCompatibility() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
     public PacketFilter getFilter() {
 	return this.filter;
-    }
-
-    public String getHelp() {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    public String getVersion() {
-	// TODO Auto-generated method stub
-	return null;
     }
 
     public void processPacket(Packet packet) {
 	Message msg = (Message) packet;
 	String body = msg.getBody();
-	if (body.toLowerCase().equals("die")) {
-	    this.die(packet);
+	String cmd = null;
+	System.out.println(body);
+	if (!body.startsWith("#!")) {
+	    return;
+	} else {
+	    if (body.contains(" ")) {
+		int t = body.indexOf(" ");
+		cmd = body.substring(2, t);
+	    } else {
+		cmd = body.substring(2);
+	    }
+	    
+	}
+	try {
+	    this.getClass().getMethod(cmd, Packet.class).invoke(this, packet);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
-    private void die(Packet packet) {
+    public void die(Packet packet) {
 	Message answer = new Message(packet.getFrom());
-	answer.setBody("Marks died, Lenin died and I have to go also...");
+	answer.setBody("Marx died, Lenin died and I have to go also...");
 	this.connection.sendPacket(answer);
 	System.exit(0);
+    }
+
+    public void about(Packet packet) {
+	Message answer = new Message(packet.getFrom());
+	answer.setBody("I'm just a Bot");
+	this.connection.sendPacket(answer);
+    }
+
+    public void help(Packet packet) {
+    }
+
+    public void version(Packet packet) {
+    }
+
+    public String getCompatibility() {
+	return null;
     }
 
 }
