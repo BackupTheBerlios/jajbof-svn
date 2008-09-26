@@ -262,9 +262,9 @@ public class JAJBot {
     }
 
     private void waitForPackets() {
-	XmlConsoleModul xml = new XmlConsoleModul(connection);
+//	XmlConsoleModul xml = new XmlConsoleModul(connection);
 	AdminModul adminModul = new AdminModul(connection);
-	connection.addPacketListener(xml, xml.getFilter());
+//	connection.addPacketListener(xml, xml.getFilter());
 	connection.addPacketListener(adminModul, adminModul.getFilter());
 
     }

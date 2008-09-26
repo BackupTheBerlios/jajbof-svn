@@ -22,6 +22,9 @@
 
 package de.blase16.jajbot.modules;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.FromMatchesFilter;
@@ -62,17 +65,18 @@ public class AdminModul implements JAJBofModul {
 	String body = msg.getBody();
 	String cmd = null;
 	System.out.println(body);
-	if (!body.startsWith("#!")) {
+	if (!body.startsWith("!")) {
 	    return;
 	} else {
 	    if (body.contains(" ")) {
 		int t = body.indexOf(" ");
-		cmd = body.substring(2, t);
+		cmd = body.substring(1, t);
 	    } else {
-		cmd = body.substring(2);
+		cmd = body.substring(1);
 	    }
-	    
+
 	}
+	cmd = "cmd" + cmd.substring(0, 1).toUpperCase() + cmd.substring(1);
 	try {
 	    this.getClass().getMethod(cmd, Packet.class).invoke(this, packet);
 	} catch (Exception e) {
@@ -80,23 +84,38 @@ public class AdminModul implements JAJBofModul {
 	}
     }
 
-    public void die(Packet packet) {
+    public void cmdShutdown(Packet packet) {
 	Message answer = new Message(packet.getFrom());
 	answer.setBody("Marx died, Lenin died and I have to go also...");
 	this.connection.sendPacket(answer);
 	System.exit(0);
     }
 
-    public void about(Packet packet) {
+    public void cmdAbout(Packet packet) {
 	Message answer = new Message(packet.getFrom());
 	answer.setBody("I'm just a Bot");
 	this.connection.sendPacket(answer);
     }
 
-    public void help(Packet packet) {
+    public void cmdHelp(Packet packet) {
+	Method[] meth = this.getClass().getMethods();
+	String body = "The modul admin contains following commands:\n";
+	for (Method method : meth) {
+	    Type[] types = method.getGenericParameterTypes();
+	    if (types.length == 1 && types[0].equals(Packet.class)
+		    && method.getName().startsWith("cmd")) {
+		body += "!" + method.getName().substring(3).toLowerCase() + "\n";
+	    }
+	}
+	Message msg = new Message(packet.getFrom());
+	msg.setBody(body);
+	this.connection.sendPacket(msg);
     }
 
-    public void version(Packet packet) {
+    public void cmdVersion(Packet packet) {
+	Message msg = new Message(packet.getFrom());
+	msg.setBody("Version: 0.000001");
+	this.connection.sendPacket(msg);
     }
 
     public String getCompatibility() {

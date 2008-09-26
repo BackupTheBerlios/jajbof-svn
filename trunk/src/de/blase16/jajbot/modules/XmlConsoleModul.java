@@ -57,13 +57,13 @@ public class XmlConsoleModul implements JAJBofModul {
 	return filter;
     }
 
-    public void about(Packet packet) {
+    public void cmdAbout(Packet packet) {
     }
 
-    public void help(Packet packet) {
+    public void cmdHelp(Packet packet) {
     }
 
-    public void version(Packet packet) {
+    public void cmdVersion(Packet packet) {
     }
 
     public String getCompatibility() {

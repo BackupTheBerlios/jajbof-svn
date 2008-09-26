@@ -51,14 +51,14 @@ public interface JAJBofModul extends PacketListener {
      * 
      * @return
      */
-    public void about(Packet packet);
+    public void cmdAbout(Packet packet);
 
     /**
      * Will be used for versioning the moduls
      * 
      * @return version string
      */
-    public void version(Packet packet);
+    public void cmdVersion(Packet packet);
 
     /**
      * Will be used for checking if this modul could be used with this version
@@ -73,6 +73,6 @@ public interface JAJBofModul extends PacketListener {
      * 
      * @return helpful information
      */
-    public void help(Packet packet);
+    public void cmdHelp(Packet packet);
 
 }
