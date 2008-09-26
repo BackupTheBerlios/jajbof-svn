@@ -6,7 +6,7 @@ Features to implepment
 
 Features
 --------
-* Admin Modul [ ]
-* A possibility of defining the modules to use over a config[ ]
+* Admin Modul [X]
+* A possibility of defining the modules to use over a config[X]
 * History Modul [ ]
 * Muc Modul [ ]
