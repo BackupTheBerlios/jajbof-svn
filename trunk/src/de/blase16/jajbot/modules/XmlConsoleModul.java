@@ -41,12 +41,14 @@ public class XmlConsoleModul extends JAJBotModule implements JAJBotModuleI {
     public XmlConsoleModul(XMPPConnection connection) {
 	super(connection);
 	filter  = new NotAPacketFilter();
+	this.modPrefix = "xml";
+	this.about = null;
+	this.version = null;
     }
 
     public void processPacket(Packet packet) {
 	System.out.println(packet.toXML());
-	this.about = null;
-	this.version = null;
+	super.processPacket(packet);
     }
     
     public PacketFilter getFilter()

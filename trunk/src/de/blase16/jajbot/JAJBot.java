@@ -252,6 +252,7 @@ public class JAJBot {
 	    try {
 		if (files[i].toURL().toString().endsWith("jar")) {
 		    urls[i] = files[i].toURL();
+		    System.out.println(urls[i]);
 		}
 	    } catch (MalformedURLException e) {
 		System.out.println(e.getMessage());
