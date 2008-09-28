@@ -33,12 +33,12 @@ import org.jivesoftware.smack.packet.Packet;
 import de.blase16.jajbot.JAJBotModule;
 import de.blase16.jajbot.JAJBotModuleI;
 
-public class AdminModul extends JAJBotModule implements JAJBotModuleI {
+public class AdminModule extends JAJBotModule implements JAJBotModuleI {
 
     protected AndFilter filter;
     protected String[] admins = { "kalkin@jabber.ccc.de", "vt100@jabber.ccc.de" };
 
-    public AdminModul(XMPPConnection conn) {
+    public AdminModule(XMPPConnection conn) {
         super(conn);
         this.modPrefix = "";
         this.about = "Das ist ein Bot. Es benutzt das JAJBoF.\n"
