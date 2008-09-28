@@ -73,7 +73,7 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      */
     public void cmdHelp(Packet packet) {
         Method[] meth = this.getClass().getMethods();
-        String body = "The modul admin contains following commands:\n";
+        String body = "The "+ this.getClass().getName()  +" contains following commands:\n";
         for (Method method : meth) {
             Type[] types = method.getGenericParameterTypes();
             if (types.length == 1 && types[0].equals(Packet.class)

@@ -38,8 +38,13 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.muc.InvitationListener;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+
+import de.blase16.jajbot.modules.MucModule;
 
 /**
  * @author <a href="mailto:mail@kalkin.de">kalkin</a>
@@ -69,6 +74,8 @@ public class JAJBot {
     private String modulePath = "./";
 
     private String moduleFile = "modules";
+
+    private boolean enabledMuc = false;
 
     public JAJBot(String fileName) throws XMPPException {
         System.out.println(printLicense());
@@ -103,6 +110,9 @@ public class JAJBot {
 
             if (config.getProperty("SSL") != null)
                 useSSL = Boolean.parseBoolean(config.getProperty("SSL"));
+
+            if (config.getProperty("MUC") != null)
+                enabledMuc = Boolean.parseBoolean(config.getProperty("MUC"));
 
             if (config.getProperty("RESSOURCE") != null)
                 ressource = config.getProperty("RESSOURCE");
@@ -178,6 +188,19 @@ public class JAJBot {
                 System.out.println("Couldn't create an instace of the module "
                         + module.getName());
             }
+        }
+
+        if (this.enabledMuc) {
+            MultiUserChat.addInvitationListener(this.connection,
+                    new InvitationListener() {
+                        public void invitationReceived(XMPPConnection conn,
+                                String room, String inviter, String reason,
+                                String password, Message msg) {
+                            MucModule mucmod = new MucModule(conn, room, password);
+                            connection.addPacketListener(mucmod, mucmod.getFilter());
+                        }
+
+                    });
         }
     }
 
