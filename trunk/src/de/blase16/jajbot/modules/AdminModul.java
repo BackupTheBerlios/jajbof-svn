@@ -39,27 +39,27 @@ public class AdminModul extends JAJBotModule implements JAJBotModuleI {
     protected String[] admins = { "kalkin@jabber.ccc.de", "vt100@jabber.ccc.de" };
 
     public AdminModul(XMPPConnection conn) {
-	super(conn);
-	this.modPrefix = "";
-	this.about = "Das ist ein Bot. Es benutzt das JAJBoF.\n"
-	    + "Der Bot gehšrt kalkin@jabber.ccc.de.\n "
-	    + "Mit !shutdown kann kalkin und vt100 ihn abschalten";
-	this.version = "0.2";
-	
-	OrFilter orFilter = new OrFilter();
+        super(conn);
+        this.modPrefix = "";
+        this.about = "Das ist ein Bot. Es benutzt das JAJBoF.\n"
+                + "Der Bot gehšrt kalkin@jabber.ccc.de.\n "
+                + "Mit !shutdown kann kalkin und vt100 ihn abschalten";
+        this.version = "0.2";
 
-	for (String admin : admins) {
-	    orFilter.addFilter(new FromMatchesFilter(admin));
-	}
+        OrFilter orFilter = new OrFilter();
 
-	filter = new AndFilter(new PacketTypeFilter(Message.class));
-	filter.addFilter(orFilter);
+        for (String admin : admins) {
+            orFilter.addFilter(new FromMatchesFilter(admin));
+        }
+
+        filter = new AndFilter(new PacketTypeFilter(Message.class));
+        filter.addFilter(orFilter);
     }
 
     public void cmdShutdown(Packet packet) {
-	sendMessage(packet.getFrom(),
-		"Marx died, Lenin died and I have to go also...");
-	System.exit(0);
+        sendMessage(packet.getFrom(),
+                "Marx died, Lenin died and I have to go also...");
+        System.exit(0);
     }
 
 }

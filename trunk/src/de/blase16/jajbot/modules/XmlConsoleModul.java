@@ -32,32 +32,31 @@ import de.blase16.jajbot.filters.NotAPacketFilter;
 
 /**
  * @author kalkin
- *
+ * 
  */
 public class XmlConsoleModul extends JAJBotModule implements JAJBotModuleI {
 
     private NotAPacketFilter filter;
-    
+
     public XmlConsoleModul(XMPPConnection connection) {
-	super(connection);
-	filter  = new NotAPacketFilter();
-	this.modPrefix = "xml";
-	this.about = null;
-	this.version = null;
+        super(connection);
+        filter = new NotAPacketFilter();
+        this.modPrefix = "xml";
+        this.about = null;
+        this.version = null;
     }
 
     public void processPacket(Packet packet) {
-	System.out.println(packet.toXML());
-	super.processPacket(packet);
+        System.out.println(packet.toXML());
+        super.processPacket(packet);
     }
-    
-    public PacketFilter getFilter()
-    {
-	return filter;
+
+    public PacketFilter getFilter() {
+        return filter;
     }
 
     public String getCompatibility() {
-	return null;
+        return null;
     }
-    
+
 }

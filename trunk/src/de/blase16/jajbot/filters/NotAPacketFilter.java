@@ -39,7 +39,7 @@ public class NotAPacketFilter implements PacketFilter {
      * @return true Returns always true
      */
     public boolean accept(Packet packet) {
-	return true;
+        return true;
     }
 
 }

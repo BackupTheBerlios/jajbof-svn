@@ -47,10 +47,10 @@ public abstract class JAJBotModule implements JAJBotModuleI {
     protected String about = "FooBar";
 
     protected String modPrefix = this.getClass().getName()
-	    .replace("Module", "").toLowerCase();
+            .replace("Module", "").toLowerCase();
 
     protected JAJBotModule(XMPPConnection conn) {
-	this.connection = conn;
+        this.connection = conn;
     }
 
     /**
@@ -60,7 +60,7 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      *      .Packet)
      */
     public void cmdAbout(Packet packet) {
-	sendMessage(packet.getFrom(), this.about);
+        sendMessage(packet.getFrom(), this.about);
 
     }
 
@@ -72,20 +72,20 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      *      .Packet)
      */
     public void cmdHelp(Packet packet) {
-	Method[] meth = this.getClass().getMethods();
-	String body = "The modul admin contains following commands:\n";
-	for (Method method : meth) {
-	    Type[] types = method.getGenericParameterTypes();
-	    if (types.length == 1 && types[0].equals(Packet.class)
-		    && method.getName().startsWith("cmd")) {
-		String cmd = method.getName().substring(3).toLowerCase();
-		if (!this.modPrefix.equalsIgnoreCase("")) {
-		    cmd = this.modPrefix + " " + cmd;
-		}
-		body += "!" + cmd + "\n";
-	    }
-	}
-	sendMessage(packet.getFrom(), body);
+        Method[] meth = this.getClass().getMethods();
+        String body = "The modul admin contains following commands:\n";
+        for (Method method : meth) {
+            Type[] types = method.getGenericParameterTypes();
+            if (types.length == 1 && types[0].equals(Packet.class)
+                    && method.getName().startsWith("cmd")) {
+                String cmd = method.getName().substring(3).toLowerCase();
+                if (!this.modPrefix.equalsIgnoreCase("")) {
+                    cmd = this.modPrefix + " " + cmd;
+                }
+                body += "!" + cmd + "\n";
+            }
+        }
+        sendMessage(packet.getFrom(), body);
     }
 
     /**
@@ -95,9 +95,9 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      *      .Packet)
      */
     public void cmdVersion(Packet packet) {
-	Message msg = new Message(packet.getFrom());
-	msg.setBody(this.version);
-	this.connection.sendPacket(msg);
+        Message msg = new Message(packet.getFrom());
+        msg.setBody(this.version);
+        this.connection.sendPacket(msg);
     }
 
     /**
@@ -106,8 +106,8 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      * @see de.blase16.jajbot.JAJBotModuleI#getCompatibility()
      */
     public String getCompatibility() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -118,7 +118,7 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      * @see de.blase16.jajbot.JAJBotModuleI#getFilter()
      */
     public PacketFilter getFilter() {
-	return this.filter;
+        return this.filter;
     }
 
     /**
@@ -129,17 +129,17 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      *      packet.Packet)
      */
     public void processPacket(Packet packet) {
-	Message msg = (Message) packet;
-	String body = msg.getBody();
-	String cmd = extractCommand(body);
-	if (cmd == null)
-	    return;
-	cmd = "cmd" + cmd.substring(0, 1).toUpperCase() + cmd.substring(1);
+        Message msg = (Message) packet;
+        String body = msg.getBody();
+        String cmd = extractCommand(body);
+        if (cmd == null)
+            return;
+        cmd = "cmd" + cmd.substring(0, 1).toUpperCase() + cmd.substring(1);
 
-	try {
-	    this.getClass().getMethod(cmd, Packet.class).invoke(this, packet);
-	} catch (Exception e) {
-	}
+        try {
+            this.getClass().getMethod(cmd, Packet.class).invoke(this, packet);
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -150,18 +150,18 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      * @return the extracted command string
      */
     protected String extractCommand(String body) {
-	if (!body.startsWith("!" + this.modPrefix)) {
-	    return null;
-	} else {
-	    body = body.substring(this.modPrefix.length() + 1).trim();
-	    if (body.contains(" ")) {
-		int t = body.indexOf(" ");
-		return body.substring(0, t);
-	    } else {
-		return body;
-	    }
+        if (!body.startsWith("!" + this.modPrefix)) {
+            return null;
+        } else {
+            body = body.substring(this.modPrefix.length() + 1).trim();
+            if (body.contains(" ")) {
+                int t = body.indexOf(" ");
+                return body.substring(0, t);
+            } else {
+                return body;
+            }
 
-	}
+        }
     }
 
     /**
@@ -173,13 +173,13 @@ public abstract class JAJBotModule implements JAJBotModuleI {
      *            The message text
      */
     protected void sendMessage(String to, String msg) {
-	if (msg.equals("") || msg == null) {
-	    return;
-	} else {
-	    Message message = new Message(to);
-	    message.setBody(msg);
-	    connection.sendPacket(message);
-	}
+        if (msg.equals("") || msg == null) {
+            return;
+        } else {
+            Message message = new Message(to);
+            message.setBody(msg);
+            connection.sendPacket(message);
+        }
     }
 
 }

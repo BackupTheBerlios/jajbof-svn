@@ -71,18 +71,18 @@ public class JAJBot {
     private String moduleFile = "modules";
 
     public JAJBot(String fileName) throws XMPPException {
-	System.out.println(printLicense());
-	if (loadConfig(new File(fileName))) {
-	    connect(jid, pw, ressource);
-	    loadModules();
-	    while (true)
-		try {
-		    Thread.sleep(2000);
-		} catch (InterruptedException e) {
-		    e.printStackTrace();
-		}
-	} else
-	    System.out.println("The file does not exist or has wrong syntax.");
+        System.out.println(printLicense());
+        if (loadConfig(new File(fileName))) {
+            connect(jid, pw, ressource);
+            loadModules();
+            while (true)
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+        } else
+            System.out.println("The file does not exist or has wrong syntax.");
     }
 
     /**
@@ -93,38 +93,38 @@ public class JAJBot {
      * @return
      */
     private boolean loadConfig(File fileName) {
-	config = new Properties();
-	try {
-	    config.load(new FileInputStream(fileName));
+        config = new Properties();
+        try {
+            config.load(new FileInputStream(fileName));
 
-	    jid = config.getProperty("JID");
+            jid = config.getProperty("JID");
 
-	    pw = config.getProperty("PASSWORD");
+            pw = config.getProperty("PASSWORD");
 
-	    if (config.getProperty("SSL") != null)
-		useSSL = Boolean.parseBoolean(config.getProperty("SSL"));
+            if (config.getProperty("SSL") != null)
+                useSSL = Boolean.parseBoolean(config.getProperty("SSL"));
 
-	    if (config.getProperty("RESSOURCE") != null)
-		ressource = config.getProperty("RESSOURCE");
+            if (config.getProperty("RESSOURCE") != null)
+                ressource = config.getProperty("RESSOURCE");
 
-	    if (config.getProperty("STATUS_MSG") != null)
-		statusMsg = config.getProperty("STATUS_MSG");
+            if (config.getProperty("STATUS_MSG") != null)
+                statusMsg = config.getProperty("STATUS_MSG");
 
-	    if (config.getProperty("MODULE_PATH") != null)
-		modulePath = config.getProperty("MODULE_PATH");
+            if (config.getProperty("MODULE_PATH") != null)
+                modulePath = config.getProperty("MODULE_PATH");
 
-	    if (config.getProperty("MODULE_FILE") != null)
-		moduleFile = config.getProperty("MODULE_FILE");
+            if (config.getProperty("MODULE_FILE") != null)
+                moduleFile = config.getProperty("MODULE_FILE");
 
-	} catch (FileNotFoundException e) {
-	    System.out.println("Damn it there is no " + fileName);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	if (jid != null && pw != null)
-	    return true;
-	else
-	    return false;
+        } catch (FileNotFoundException e) {
+            System.out.println("Damn it there is no " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (jid != null && pw != null)
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -136,62 +136,61 @@ public class JAJBot {
      * @throws XMPPException
      */
     private void connect(String jid, String pw, String ressource)
-	    throws XMPPException {
+            throws XMPPException {
 
-	if (!isConnected) {
-	    if (useSSL) {
-		ConnectionConfiguration conConf = new ConnectionConfiguration(
-			StringUtils.parseServer(jid));
-		conConf
-			.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
-		connection = new XMPPConnection(conConf);
-	    }
-	    if (!useSSL)
-		connection = new XMPPConnection(StringUtils.parseServer(jid));
-	    connection.connect();
-	    connection.login(StringUtils.parseName(jid), pw, ressource);
-	    presence = new Presence(Presence.Type.available);
-	    presence.setMode(Presence.Mode.available);
-	    presence.setStatus(this.statusMsg);
-	    connection.sendPacket(presence);
-	    roster = connection.getRoster();
-	    roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
-	}
+        if (!isConnected) {
+            if (useSSL) {
+                ConnectionConfiguration conConf = new ConnectionConfiguration(
+                        StringUtils.parseServer(jid));
+                conConf
+                        .setSecurityMode(ConnectionConfiguration.SecurityMode.required);
+                connection = new XMPPConnection(conConf);
+            }
+            if (!useSSL)
+                connection = new XMPPConnection(StringUtils.parseServer(jid));
+            connection.connect();
+            connection.login(StringUtils.parseName(jid), pw, ressource);
+            presence = new Presence(Presence.Type.available);
+            presence.setMode(Presence.Mode.available);
+            presence.setStatus(this.statusMsg);
+            connection.sendPacket(presence);
+            roster = connection.getRoster();
+            roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+        }
     }
 
     /**
      * This method loads the needed Modules
      */
     private void loadModules() {
-	LinkedList<Class<JAJBotModuleI>> modules = getModules();
-	if (modules == null) {
-	    System.out.println("No modules loaded");
-	    return;
-	}
-	for (Class<JAJBotModuleI> module : modules) {
+        LinkedList<Class<JAJBotModuleI>> modules = getModules();
+        if (modules == null) {
+            System.out.println("No modules loaded");
+            return;
+        }
+        for (Class<JAJBotModuleI> module : modules) {
 
-	    try {
-		JAJBotModuleI mod = (JAJBotModuleI) module.getConstructors()[0]
-			.newInstance(connection);
-		connection.addPacketListener(mod, mod.getFilter());
-	    } catch (Exception e) {
-		System.out.println("Couldn't create an instace of the module "
-			+ module.getName());
-	    }
-	}
+            try {
+                JAJBotModuleI mod = (JAJBotModuleI) module.getConstructors()[0]
+                        .newInstance(connection);
+                connection.addPacketListener(mod, mod.getFilter());
+            } catch (Exception e) {
+                System.out.println("Couldn't create an instace of the module "
+                        + module.getName());
+            }
+        }
     }
 
-    
     /**
      * @return String containing the license
      */
     private String printLicense() {
-	String lizense = "\nJAJBoF (Just Another Jabber Bot Framework) version 0.23,\n";
-	lizense += "Copyright (C) 2006 kalkin\n";
-	lizense += "JAJBoF comes with ABSOLUTELY NO WARRANTY. This is free\n";
-	lizense += "software, and you are welcome to redistribute it under\n";
-	lizense += "certain conditions; for details see the LICENSE file.\n";
-	return lizense;
+        String lizense = "\nJAJBoF (Just Another Jabber Bot Framework) version 0.23,\n";
+        lizense += "Copyright (C) 2006 kalkin\n";
+        lizense += "JAJBoF comes with ABSOLUTELY NO WARRANTY. This is free\n";
+        lizense += "software, and you are welcome to redistribute it under\n";
+        lizense += "certain conditions; for details see the LICENSE file.\n";
+        return lizense;
     }
 
     /**
@@ -202,28 +201,28 @@ public class JAJBot {
      * @return {@link LinkedList}
      */
     private LinkedList<String> getModulesNames() {
-	LinkedList<String> modules = new LinkedList<String>();
-	BufferedReader f = null;
-	try {
-	    f = new BufferedReader(new FileReader(new File(this.moduleFile)));
-	    while (true) {
-		String module = f.readLine();
-		if (module == null) {
-		    break;
-		}
-		modules.add(module);
-	    }
-	} catch (Exception e) {
-	    System.out.println("The file " + this.moduleFile
-		    + " doesn't exists");
-	}
+        LinkedList<String> modules = new LinkedList<String>();
+        BufferedReader f = null;
+        try {
+            f = new BufferedReader(new FileReader(new File(this.moduleFile)));
+            while (true) {
+                String module = f.readLine();
+                if (module == null) {
+                    break;
+                }
+                modules.add(module);
+            }
+        } catch (Exception e) {
+            System.out.println("The file " + this.moduleFile
+                    + " doesn't exists");
+        }
 
-	if (modules.size() == 0) {
-	    System.out.println("No modules to load");
-	    return null;
-	}
+        if (modules.size() == 0) {
+            System.out.println("No modules to load");
+            return null;
+        }
 
-	return modules;
+        return modules;
     }
 
     /**
@@ -234,40 +233,40 @@ public class JAJBot {
      */
     @SuppressWarnings("unchecked")
     private LinkedList<Class<JAJBotModuleI>> getModules() {
-	LinkedList<String> modulesNames = getModulesNames();
-	LinkedList<Class<JAJBotModuleI>> loadedModules = new LinkedList<Class<JAJBotModuleI>>();
-	if (modulesNames == null)
-	    return null;
+        LinkedList<String> modulesNames = getModulesNames();
+        LinkedList<Class<JAJBotModuleI>> loadedModules = new LinkedList<Class<JAJBotModuleI>>();
+        if (modulesNames == null)
+            return null;
 
-	File dir = new File(this.modulePath);
-	File[] files = dir.listFiles();
+        File dir = new File(this.modulePath);
+        File[] files = dir.listFiles();
 
-	URL[] urls = new URL[files.length];
-	for (int i = 0; i < files.length; i++) {
-	    try {
-		if (files[i].toURL().toString().endsWith("jar")) {
-		    urls[i] = files[i].toURL();
-		    System.out.println(urls[i]);
-		}
-	    } catch (MalformedURLException e) {
-		System.out.println(e.getMessage());
-	    }
-	}
-	URLClassLoader cl = new URLClassLoader(urls);
+        URL[] urls = new URL[files.length];
+        for (int i = 0; i < files.length; i++) {
+            try {
+                if (files[i].toURL().toString().endsWith("jar")) {
+                    urls[i] = files[i].toURL();
+                    System.out.println(urls[i]);
+                }
+            } catch (MalformedURLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        URLClassLoader cl = new URLClassLoader(urls);
 
-	for (String name : modulesNames) {
-	    System.out.println("Trying to load " + name);
-	    try {
-		loadedModules.add((Class<JAJBotModuleI>) Class.forName(name,
-			false, cl));
-		System.out.println("Loaded successfull " + name);
-	    } catch (Exception e) {
-		System.out.println("Can't find module " + name + "!");
-	    }
-	}
+        for (String name : modulesNames) {
+            System.out.println("Trying to load " + name);
+            try {
+                loadedModules.add((Class<JAJBotModuleI>) Class.forName(name,
+                        false, cl));
+                System.out.println("Loaded successfull " + name);
+            } catch (Exception e) {
+                System.out.println("Can't find module " + name + "!");
+            }
+        }
 
-	if (loadedModules.size() == 0)
-	    return null;
-	return loadedModules;
+        if (loadedModules.size() == 0)
+            return null;
+        return loadedModules;
     }
 }

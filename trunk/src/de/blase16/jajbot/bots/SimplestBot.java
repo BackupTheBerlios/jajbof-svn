@@ -28,18 +28,16 @@ import de.blase16.jajbot.JAJBot;
 
 public class SimplestBot {
 
-
     /**
      * @param args
      */
     public static void main(String[] args) {
-	try {
-	    new JAJBot("config.properties");
-	} catch (XMPPException e) {
-	    e.printStackTrace();
-	}
+        try {
+            new JAJBot("config.properties");
+        } catch (XMPPException e) {
+            e.printStackTrace();
+        }
 
     }
-
 
 }
